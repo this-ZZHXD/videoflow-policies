@@ -542,11 +542,17 @@
     <script>
         // Simulate loading user data from TikTok API using user.info.basic scope
         window.onload = function() {
-            // Check if user is logged in
-            const isLoggedIn = sessionStorage.getItem('tiktok_connected');
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
-                return;
+            // Check for demo mode
+            const urlParams = new URLSearchParams(window.location.search);
+            const isDemoMode = urlParams.get('demo') === 'true';
+            
+            // Check if user is logged in (skip check in demo mode)
+            if (!isDemoMode) {
+                const isLoggedIn = sessionStorage.getItem('tiktok_connected');
+                if (!isLoggedIn) {
+                    window.location.href = 'login.html';
+                    return;
+                }
             }
 
             // Simulate API response with user.info.basic data
@@ -580,6 +586,16 @@
 
                 // Load recent activity
                 loadRecentActivity();
+                
+                // If in demo mode, update upload link to pass demo parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const isDemoMode = urlParams.get('demo') === 'true';
+                if (isDemoMode) {
+                    const uploadLinks = document.querySelectorAll('a[href="upload.html"]');
+                    uploadLinks.forEach(link => {
+                        link.href = 'upload.html?demo=true';
+                    });
+                }
             }, 500);
         };
 

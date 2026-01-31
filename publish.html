@@ -760,10 +760,33 @@
     <script>
         // Check if user is logged in
         window.onload = function() {
-            const isLoggedIn = sessionStorage.getItem('tiktok_connected');
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
-                return;
+            // Check for demo mode
+            const urlParams = new URLSearchParams(window.location.search);
+            const isDemoMode = urlParams.get('demo') === 'true';
+            
+            // Check if user is logged in (skip check in demo mode)
+            if (!isDemoMode) {
+                const isLoggedIn = sessionStorage.getItem('tiktok_connected');
+                if (!isLoggedIn) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+            }
+            
+            // If in demo mode, update links
+            if (isDemoMode) {
+                const uploadLinks = document.querySelectorAll('a[href="upload.html"]');
+                uploadLinks.forEach(link => {
+                    link.href = 'upload.html?demo=true';
+                });
+                
+                // Update edit button
+                const editBtn = document.querySelector('.edit-btn');
+                if (editBtn) {
+                    editBtn.onclick = function() {
+                        window.location.href = 'upload.html?demo=true';
+                    };
+                }
             }
 
             // Load pending video data
@@ -877,7 +900,10 @@
         }
 
         function returnToDashboard() {
-            window.location.href = 'dashboard.html';
+            const urlParams = new URLSearchParams(window.location.search);
+            const isDemoMode = urlParams.get('demo') === 'true';
+            const dashboardUrl = isDemoMode ? 'dashboard.html?demo=true' : 'dashboard.html';
+            window.location.href = dashboardUrl;
         }
     </script>
 </body>

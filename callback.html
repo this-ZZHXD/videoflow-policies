@@ -220,7 +220,7 @@
 
         <!-- Loading State (default) -->
         <div id="loading-state">
-            <div class="status-icon loading">⏳</div>
+            <div class="status-icon loading">â³</div>
             <h1>Processing Authorization...</h1>
             <p>Please wait while we complete your TikTok connection.</p>
             <div class="loading-spinner"></div>
@@ -228,7 +228,7 @@
 
         <!-- Success State -->
         <div id="success-state" style="display: none;">
-            <div class="status-icon success">✓</div>
+            <div class="status-icon success">âœ“</div>
             <h1>Authorization Successful!</h1>
             <p>You have successfully connected your TikTok account to VideoFlow Publisher.</p>
             
@@ -248,13 +248,13 @@
                 </div>
             </div>
 
-            <a href="index.html" class="button">Go to Dashboard</a>
+            <a href="dashboard.html?demo=true" class="button">Go to Dashboard</a>
             <a href="index.html" class="button button-secondary">Return Home</a>
         </div>
 
         <!-- Error State -->
         <div id="error-state" style="display: none;">
-            <div class="status-icon error">✗</div>
+            <div class="status-icon error">âœ—</div>
             <h1>Authorization Failed</h1>
             <p id="error-message">We couldn't complete the authorization. Please try again.</p>
             
@@ -313,6 +313,11 @@
                 document.getElementById('success-state').style.display = 'block';
                 document.getElementById('auth-code').textContent = code.substring(0, 20) + '...';
                 
+                // Mark user as connected
+                sessionStorage.setItem('tiktok_connected', 'true');
+                sessionStorage.setItem('auth_code', code);
+                sessionStorage.setItem('auth_state', state);
+                
                 // In a real application, you would:
                 // 1. Send the code to your backend
                 // 2. Exchange it for an access token
@@ -322,10 +327,10 @@
                 console.log('Authorization Code:', code);
                 console.log('State:', state);
                 
-                // Auto-redirect after 5 seconds (optional)
-                // setTimeout(function() {
-                //     window.location.href = 'index.html';
-                // }, 5000);
+                // Auto-redirect to dashboard after 3 seconds
+                setTimeout(function() {
+                    window.location.href = 'dashboard.html?demo=true';
+                }, 3000);
             } else {
                 // Show error state - no code or error received
                 document.getElementById('error-state').style.display = 'block';

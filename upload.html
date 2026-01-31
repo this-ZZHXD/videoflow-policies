@@ -625,9 +625,32 @@
 
         // Check if user is logged in
         window.onload = function() {
-            const isLoggedIn = sessionStorage.getItem('tiktok_connected');
-            if (!isLoggedIn) {
-                window.location.href = 'login.html';
+            // Check for demo mode
+            const urlParams = new URLSearchParams(window.location.search);
+            const isDemoMode = urlParams.get('demo') === 'true';
+            
+            // Check if user is logged in (skip check in demo mode)
+            if (!isDemoMode) {
+                const isLoggedIn = sessionStorage.getItem('tiktok_connected');
+                if (!isLoggedIn) {
+                    window.location.href = 'login.html';
+                }
+            }
+            
+            // If in demo mode, update dashboard links
+            if (isDemoMode) {
+                const dashboardLinks = document.querySelectorAll('a[href="dashboard.html"]');
+                dashboardLinks.forEach(link => {
+                    link.href = 'dashboard.html?demo=true';
+                });
+                
+                // Update cancel button
+                const cancelBtn = document.querySelector('.cancel-btn');
+                if (cancelBtn) {
+                    cancelBtn.onclick = function() {
+                        window.location.href = 'dashboard.html?demo=true';
+                    };
+                }
             }
         };
 
@@ -762,7 +785,11 @@
                     
                     // Redirect to publish page
                     setTimeout(() => {
-                        window.location.href = 'publish.html';
+                        // Check if we're in demo mode and pass the parameter
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const isDemoMode = urlParams.get('demo') === 'true';
+                        const publishUrl = isDemoMode ? 'publish.html?demo=true' : 'publish.html';
+                        window.location.href = publishUrl;
                     }, 500);
                 }
                 
