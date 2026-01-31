@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Authorization - VideoFlow Publisher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .status-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+        }
+
+        .status-icon.success {
+            background: #d4edda;
+            color: #28a745;
+        }
+
+        .status-icon.error {
+            background: #f8d7da;
+            color: #dc3545;
+        }
+
+        .status-icon.loading {
+            background: #d1ecf1;
+            color: #0c5460;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            font-size: 14px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item .label {
+            font-weight: 600;
+            color: #1a1a1a;
+            min-width: 100px;
+        }
+
+        .info-item .value {
+            color: #666;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            word-break: break-all;
+        }
+
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .button-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            margin-left: 10px;
+        }
+
+        .button-secondary:hover {
+            background: #f8f9fa;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .button {
+                display: block;
+                margin-bottom: 10px;
+            }
+
+            .button-secondary {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="VFP.jpg" alt="VideoFlow Publisher">
+        </div>
+
+        <!-- Loading State (default) -->
+        <div id="loading-state">
+            <div class="status-icon loading">⏳</div>
+            <h1>Processing Authorization...</h1>
+            <p>Please wait while we complete your TikTok connection.</p>
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Success State -->
+        <div id="success-state" style="display: none;">
+            <div class="status-icon success">✓</div>
+            <h1>Authorization Successful!</h1>
+            <p>You have successfully connected your TikTok account to VideoFlow Publisher.</p>
+            
+            <div class="info-box">
+                <h3>Authorization Details</h3>
+                <div class="info-item">
+                    <span class="label">Status:</span>
+                    <span class="value" style="color: #28a745;">Connected</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Authorization Code:</span>
+                    <span class="value" id="auth-code">Processing...</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Scopes Granted:</span>
+                    <span class="value">user.info.basic, video.upload, video.publish</span>
+                </div>
+            </div>
+
+            <a href="index.html" class="button">Go to Dashboard</a>
+            <a href="index.html" class="button button-secondary">Return Home</a>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" style="display: none;">
+            <div class="status-icon error">✗</div>
+            <h1>Authorization Failed</h1>
+            <p id="error-message">We couldn't complete the authorization. Please try again.</p>
+            
+            <div class="info-box">
+                <h3>Error Details</h3>
+                <div class="info-item">
+                    <span class="label">Error:</span>
+                    <span class="value" id="error-type">Unknown Error</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">Description:</span>
+                    <span class="value" id="error-description">Please contact support if this problem persists.</span>
+                </div>
+            </div>
+
+            <a href="index.html" class="button">Try Again</a>
+            <a href="index.html" class="button button-secondary">Return Home</a>
+        </div>
+
+        <div class="footer-note">
+            This is a secure OAuth callback endpoint for TikTok authorization.
+        </div>
+    </div>
+
+    <script>
+        // Parse URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Simulate processing delay
+        setTimeout(function() {
+            const code = getUrlParameter('code');
+            const error = getUrlParameter('error');
+            const errorDescription = getUrlParameter('error_description');
+            const state = getUrlParameter('state');
+
+            document.getElementById('loading-state').style.display = 'none';
+
+            if (error) {
+                // Show error state
+                document.getElementById('error-state').style.display = 'block';
+                document.getElementById('error-type').textContent = error;
+                document.getElementById('error-description').textContent = 
+                    errorDescription || 'Authorization was denied or failed.';
+                
+                if (error === 'access_denied') {
+                    document.getElementById('error-message').textContent = 
+                        'You denied the authorization request. To use VideoFlow Publisher, you need to grant the requested permissions.';
+                }
+            } else if (code) {
+                // Show success state
+                document.getElementById('success-state').style.display = 'block';
+                document.getElementById('auth-code').textContent = code.substring(0, 20) + '...';
+                
+                // In a real application, you would:
+                // 1. Send the code to your backend
+                // 2. Exchange it for an access token
+                // 3. Store the token securely
+                // 4. Redirect to the dashboard
+                
+                console.log('Authorization Code:', code);
+                console.log('State:', state);
+                
+                // Auto-redirect after 5 seconds (optional)
+                // setTimeout(function() {
+                //     window.location.href = 'index.html';
+                // }, 5000);
+            } else {
+                // Show error state - no code or error received
+                document.getElementById('error-state').style.display = 'block';
+                document.getElementById('error-type').textContent = 'Invalid Callback';
+                document.getElementById('error-description').textContent = 
+                    'No authorization code or error received from TikTok.';
+            }
+        }, 1500); // 1.5 second delay to simulate processing
+    </script>
+</body>
+</html>
