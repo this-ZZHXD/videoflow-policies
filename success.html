@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success - VideoFlow Publisher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            background: #d4edda;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            animation: successPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes successPop {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .video-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .video-card h3 {
+            font-size: 16px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .video-info {
+            display: grid;
+            gap: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .info-value {
+            font-size: 14px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .primary-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .secondary-btn {
+            flex: 1;
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .secondary-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .share-section {
+            background: #e3f2fd;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .share-section h4 {
+            font-size: 14px;
+            color: #1976d2;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .share-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .footer-note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Success Icon -->
+        <div class="success-icon">🎉</div>
+
+        <h1>Published Successfully!</h1>
+        <p class="subtitle">Your video is now live on TikTok and ready to be discovered by your audience.</p>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Uploaded</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🚀</div>
+                <div class="stat-value">Live</div>
+                <div class="stat-label">Status</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-value" id="privacyStatus">Public</div>
+                <div class="stat-label">Visibility</div>
+            </div>
+        </div>
+
+        <!-- Video Details -->
+        <div class="video-card">
+            <h3>📱 Video Details</h3>
+            <div class="video-info">
+                <div class="info-row">
+                    <span class="info-label">Title:</span>
+                    <span class="info-value" id="videoTitle">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Published:</span>
+                    <span class="info-value" id="publishTime">Just now</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Platform:</span>
+                    <span class="info-value">TikTok</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Video ID:</span>
+                    <span class="info-value" id="videoId">-</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Section -->
+        <div class="share-section">
+            <h4>📢 Share your success!</h4>
+            <div class="share-buttons">
+                <button class="share-btn" onclick="shareVideo('twitter')" title="Share on Twitter">🐦</button>
+                <button class="share-btn" onclick="shareVideo('facebook')" title="Share on Facebook">📘</button>
+                <button class="share-btn" onclick="shareVideo('linkedin')" title="Share on LinkedIn">💼</button>
+                <button class="share-btn" onclick="shareVideo('copy')" title="Copy Link">🔗</button>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="upload.html" class="secondary-btn">Upload Another</a>
+            <a href="dashboard.html" class="primary-btn">Go to Dashboard</a>
+        </div>
+
+        <div class="footer-note">
+            Your video will start appearing in TikTok feeds soon. Keep creating amazing content! 🎬
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Load video data from sessionStorage
+            const videoDataStr = sessionStorage.getItem('pendingVideo');
+            if (videoDataStr) {
+                const videoData = JSON.parse(videoDataStr);
+                
+                document.getElementById('videoTitle').textContent = videoData.title || 'Untitled Video';
+                
+                const privacyMap = {
+                    'public': 'Public',
+                    'friends': 'Friends',
+                    'private': 'Private'
+                };
+                document.getElementById('privacyStatus').textContent = privacyMap[videoData.privacy] || 'Public';
+                
+                // Generate mock video ID
+                const videoId = 'tiktok_' + Date.now().toString().substring(5);
+                document.getElementById('videoId').textContent = videoId;
+            }
+        };
+
+        function shareVideo(platform) {
+            const videoTitle = document.getElementById('videoTitle').textContent;
+            const message = `Just published "${videoTitle}" to TikTok using VideoFlow Publisher!`;
+            
+            switch(platform) {
+                case 'twitter':
+                    alert('Share on Twitter: ' + message);
+                    break;
+                case 'facebook':
+                    alert('Share on Facebook: ' + message);
+                    break;
+                case 'linkedin':
+                    alert('Share on LinkedIn: ' + message);
+                    break;
+                case 'copy':
+                    alert('Link copied to clipboard! (Demo mode)');
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>

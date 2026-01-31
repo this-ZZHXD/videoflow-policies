@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Video - VideoFlow Publisher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .back-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* Page Title */
+        .page-title {
+            margin-bottom: 30px;
+        }
+
+        .page-title h2 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .page-title p {
+            font-size: 16px;
+            color: #666;
+        }
+
+        /* Scope Badge */
+        .scope-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Upload Form */
+        .upload-form {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        /* File Upload Area */
+        .file-upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 12px;
+            padding: 60px 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 30px;
+            background: #fafafa;
+        }
+
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #667eea;
+            background: #e3f2fd;
+        }
+
+        .file-upload-area.has-file {
+            border-color: #4caf50;
+            background: #f1f8f4;
+        }
+
+        .upload-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .upload-text h3 {
+            font-size: 20px;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .upload-text p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .browse-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .browse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Selected File Info */
+        .selected-file {
+            display: none;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .selected-file.active {
+            display: flex;
+        }
+
+        .file-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 14px;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .remove-file-btn {
+            background: #ffebee;
+            color: #f44336;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .remove-file-btn:hover {
+            background: #ffcdd2;
+        }
+
+        /* Form Fields */
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-section label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .form-section .required {
+            color: #f44336;
+        }
+
+        .form-section input,
+        .form-section textarea,
+        .form-section select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-section input:focus,
+        .form-section textarea:focus,
+        .form-section select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-section textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .char-counter {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Privacy Options */
+        .privacy-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .privacy-option {
+            position: relative;
+        }
+
+        .privacy-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .privacy-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .privacy-option input[type="radio"]:checked + .privacy-label {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .privacy-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .privacy-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        /* API Info Box */
+        .api-info-box {
+            background: #fff9c4;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .api-info-box strong {
+            color: #f57c00;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .api-info-box ul {
+            margin-left: 20px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* Progress Bar */
+        .upload-progress {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .upload-progress.active {
+            display: block;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Action Buttons */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .next-btn {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .next-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .cancel-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .page-title h2 {
+                font-size: 24px;
+            }
+
+            .upload-form {
+                padding: 25px;
+            }
+
+            .file-upload-area {
+                padding: 40px 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .privacy-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <img src="VFP.jpg" alt="VideoFlow Publisher">
+                </div>
+                <div class="logo-text">
+                    <h1>VideoFlow Publisher</h1>
+                </div>
+            </div>
+            <a href="dashboard.html" class="back-btn">
+                <span>←</span>
+                <span>Back to Dashboard</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Page Title -->
+        <div class="page-title">
+            <div class="scope-badge">🎬 video.upload scope</div>
+            <h2>Upload Video to TikTok</h2>
+            <p>Select a video file and configure your post settings</p>
+        </div>
+
+        <!-- API Info Box -->
+        <div class="api-info-box">
+            <strong>📋 API Integration (video.upload scope):</strong>
+            <ul>
+                <li>Video file will be uploaded to TikTok servers via Content Posting API</li>
+                <li>Maximum file size: 4GB | Supported formats: MP4, MOV, MPEG, AVI, WMV, 3GP, WEBM</li>
+                <li>Video duration: 3 seconds to 10 minutes</li>
+                <li>Upload progress tracked in real-time</li>
+            </ul>
+        </div>
+
+        <!-- Upload Form -->
+        <div class="upload-form">
+            <!-- File Upload Area -->
+            <div class="file-upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon" id="uploadIcon">🎬</div>
+                <div class="upload-text">
+                    <h3 id="uploadTitle">Drag & drop your video here</h3>
+                    <p>or click to browse from your computer</p>
+                    <button type="button" class="browse-btn" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
+                        Choose Video File
+                    </button>
+                </div>
+            </div>
+
+            <input type="file" id="fileInput" class="file-input" accept="video/*" onchange="handleFileSelect(event)">
+
+            <!-- Selected File Info -->
+            <div class="selected-file" id="selectedFile">
+                <div class="file-icon">🎥</div>
+                <div class="file-details">
+                    <div class="file-name" id="fileName">video.mp4</div>
+                    <div class="file-size" id="fileSize">0 MB</div>
+                </div>
+                <button type="button" class="remove-file-btn" onclick="removeFile()">Remove</button>
+            </div>
+
+            <!-- Upload Progress -->
+            <div class="upload-progress" id="uploadProgress">
+                <div class="progress-info">
+                    <span>Uploading to TikTok servers...</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- Video Title -->
+            <div class="form-section">
+                <label>
+                    Video Title <span class="required">*</span>
+                </label>
+                <input type="text" id="videoTitle" placeholder="Enter a catchy title for your video" maxlength="150" oninput="updateCharCount('videoTitle', 'titleCounter', 150)">
+                <div class="char-counter">
+                    <span id="titleCounter">0</span> / 150 characters
+                </div>
+            </div>
+
+            <!-- Video Caption -->
+            <div class="form-section">
+                <label>
+                    Caption / Description <span class="required">*</span>
+                </label>
+                <textarea id="videoCaption" placeholder="Write a description for your video..." maxlength="2200" oninput="updateCharCount('videoCaption', 'captionCounter', 2200)"></textarea>
+                <div class="char-counter">
+                    <span id="captionCounter">0</span> / 2200 characters
+                </div>
+            </div>
+
+            <!-- Hashtags -->
+            <div class="form-section">
+                <label>Hashtags</label>
+                <input type="text" id="hashtags" placeholder="e.g., #creator #content #videoflow">
+                <div class="form-hint">Separate hashtags with spaces. Include # symbol.</div>
+            </div>
+
+            <!-- Privacy Settings -->
+            <div class="form-section">
+                <label>
+                    Privacy Setting <span class="required">*</span>
+                </label>
+                <div class="privacy-options">
+                    <div class="privacy-option">
+                        <input type="radio" id="publicPrivacy" name="privacy" value="public" checked>
+                        <label for="publicPrivacy" class="privacy-label">
+                            <div class="privacy-icon">🌍</div>
+                            <div class="privacy-name">Public</div>
+                        </label>
+                    </div>
+                    <div class="privacy-option">
+                        <input type="radio" id="friendsPrivacy" name="privacy" value="friends">
+                        <label for="friendsPrivacy" class="privacy-label">
+                            <div class="privacy-icon">👥</div>
+                            <div class="privacy-name">Friends</div>
+                        </label>
+                    </div>
+                    <div class="privacy-option">
+                        <input type="radio" id="privatePrivacy" name="privacy" value="private">
+                        <label for="privatePrivacy" class="privacy-label">
+                            <div class="privacy-icon">🔒</div>
+                            <div class="privacy-name">Private</div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" onclick="window.location.href='dashboard.html'">Cancel</button>
+                <button type="button" class="next-btn" id="nextBtn" onclick="uploadVideo()" disabled>
+                    Next: Review & Publish →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+
+        // Check if user is logged in
+        window.onload = function() {
+            const isLoggedIn = sessionStorage.getItem('tiktok_connected');
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+            }
+        };
+
+        // Handle file selection
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                selectedFile = file;
+                displaySelectedFile(file);
+                validateForm();
+            }
+        }
+
+        // Display selected file info
+        function displaySelectedFile(file) {
+            const uploadArea = document.getElementById('uploadArea');
+            const selectedFileDiv = document.getElementById('selectedFile');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+
+            uploadArea.classList.add('has-file');
+            selectedFileDiv.classList.add('active');
+            
+            fileName.textContent = file.name;
+            fileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+
+            document.getElementById('uploadIcon').textContent = '✅';
+            document.getElementById('uploadTitle').textContent = 'Video file selected';
+        }
+
+        // Remove file
+        function removeFile() {
+            selectedFile = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('uploadArea').classList.remove('has-file');
+            document.getElementById('selectedFile').classList.remove('active');
+            document.getElementById('uploadIcon').textContent = '🎬';
+            document.getElementById('uploadTitle').textContent = 'Drag & drop your video here';
+            validateForm();
+        }
+
+        // Update character counter
+        function updateCharCount(inputId, counterId, maxLength) {
+            const input = document.getElementById(inputId);
+            const counter = document.getElementById(counterId);
+            counter.textContent = input.value.length;
+            validateForm();
+        }
+
+        // Validate form
+        function validateForm() {
+            const hasFile = selectedFile !== null;
+            const hasTitle = document.getElementById('videoTitle').value.trim() !== '';
+            const hasCaption = document.getElementById('videoCaption').value.trim() !== '';
+            
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = !(hasFile && hasTitle && hasCaption);
+        }
+
+        // Drag and drop handlers
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('video/')) {
+                selectedFile = file;
+                displaySelectedFile(file);
+                validateForm();
+            } else {
+                alert('Please select a valid video file');
+            }
+        });
+
+        // Upload video with progress simulation
+        function uploadVideo() {
+            if (!selectedFile) {
+                alert('Please select a video file');
+                return;
+            }
+
+            const title = document.getElementById('videoTitle').value.trim();
+            const caption = document.getElementById('videoCaption').value.trim();
+            const hashtags = document.getElementById('hashtags').value.trim();
+            const privacy = document.querySelector('input[name="privacy"]:checked').value;
+
+            if (!title || !caption) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Store video data in sessionStorage for publish page
+            const videoData = {
+                fileName: selectedFile.name,
+                fileSize: (selectedFile.size / (1024 * 1024)).toFixed(2),
+                title: title,
+                caption: caption,
+                hashtags: hashtags,
+                privacy: privacy,
+                uploadedAt: new Date().toISOString()
+            };
+
+            sessionStorage.setItem('pendingVideo', JSON.stringify(videoData));
+
+            // Show upload progress
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const nextBtn = document.getElementById('nextBtn');
+
+            uploadProgress.classList.add('active');
+            nextBtn.disabled = true;
+
+            // Simulate upload progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // Redirect to publish page
+                    setTimeout(() => {
+                        window.location.href = 'publish.html';
+                    }, 500);
+                }
+                
+                progressBar.style.width = progress + '%';
+                progressPercent.textContent = Math.round(progress) + '%';
+            }, 200);
+        }
+    </script>
+</body>
+</html>

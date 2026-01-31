@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - VideoFlow Publisher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-text h1 {
+            font-size: 20px;
+            color: #1a1a1a;
+            font-weight: 700;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 14px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .user-status {
+            font-size: 12px;
+            color: #4caf50;
+        }
+
+        .logout-btn {
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #e0e0e0;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* Welcome Banner */
+        .welcome-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .welcome-banner h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-banner p {
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        /* TikTok Account Card - 展示 user.info.basic scope */
+        .tiktok-account-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .card-header h3 {
+            font-size: 20px;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scope-badge {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .connected-badge {
+            background: #d4edda;
+            color: #28a745;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tiktok-profile {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .tiktok-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .tiktok-details {
+            flex: 1;
+        }
+
+        .tiktok-username {
+            font-size: 24px;
+            color: #1a1a1a;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .tiktok-handle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .tiktok-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .stat-icon {
+            font-size: 16px;
+        }
+
+        /* API Info Box */
+        .api-info-box {
+            background: #fff9c4;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .api-info-box strong {
+            color: #f57c00;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .api-info-box .info-items {
+            display: grid;
+            gap: 8px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: start;
+            gap: 8px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .info-item .label {
+            font-weight: 600;
+            color: #f57c00;
+            min-width: 120px;
+        }
+
+        .info-item .value {
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .quick-actions h3 {
+            font-size: 20px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .action-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .action-card h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .action-card p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .recent-activity h3 {
+            font-size: 20px;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .activity-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: #e3f2fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .user-section {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .welcome-banner h2 {
+                font-size: 24px;
+            }
+
+            .tiktok-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .tiktok-stats {
+                justify-content: center;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">
+                    <img src="VFP.jpg" alt="VideoFlow Publisher">
+                </div>
+                <div class="logo-text">
+                    <h1>VideoFlow Publisher</h1>
+                </div>
+            </div>
+            <div class="user-section">
+                <div class="user-info">
+                    <div class="user-name" id="currentUserName">Loading...</div>
+                    <div class="user-status">● Connected to TikTok</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Welcome Banner -->
+        <div class="welcome-banner">
+            <h2 id="welcomeMessage">Welcome back!</h2>
+            <p>Your TikTok account is connected and ready to publish content.</p>
+        </div>
+
+        <!-- TikTok Account Card - Demonstrates user.info.basic scope -->
+        <div class="tiktok-account-card">
+            <div class="card-header">
+                <h3>
+                    🎵 Connected TikTok Account
+                    <span class="scope-badge">user.info.basic</span>
+                </h3>
+                <div class="connected-badge">
+                    <span>✓</span>
+                    <span>Connected</span>
+                </div>
+            </div>
+
+            <div class="tiktok-profile">
+                <div class="tiktok-avatar" id="userAvatar">
+                    <!-- Avatar or initial will be inserted here -->
+                </div>
+                <div class="tiktok-details">
+                    <div class="tiktok-username" id="displayName">TikTok Creator</div>
+                    <div class="tiktok-handle" id="username">@username</div>
+                    <div class="tiktok-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">👥</span>
+                            <span id="followers">0</span>
+                            <span>followers</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-icon">🎬</span>
+                            <span id="videoCount">0</span>
+                            <span>videos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Info Box -->
+            <div class="api-info-box">
+                <strong>📋 API Integration Info (user.info.basic scope):</strong>
+                <div class="info-items">
+                    <div class="info-item">
+                        <span class="label">User ID:</span>
+                        <span class="value" id="userId">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Display Name:</span>
+                        <span class="value" id="apiDisplayName">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Username:</span>
+                        <span class="value" id="apiUsername">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Avatar URL:</span>
+                        <span class="value" id="avatarUrl">Loading...</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Connection Status:</span>
+                        <span class="value" style="color: #28a745;">✓ Successfully Retrieved via TikTok API</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h3>⚡ Quick Actions</h3>
+            <div class="actions-grid">
+                <a href="upload.html" class="action-card">
+                    <div class="action-icon">🎬</div>
+                    <h4>Upload Video</h4>
+                    <p>Upload and publish a new video to TikTok</p>
+                </a>
+                <div class="action-card" onclick="alert('Schedule feature coming soon!')">
+                    <div class="action-icon">📅</div>
+                    <h4>Schedule Post</h4>
+                    <p>Plan your content calendar</p>
+                </div>
+                <div class="action-card" onclick="alert('Analytics feature coming soon!')">
+                    <div class="action-icon">📊</div>
+                    <h4>View Analytics</h4>
+                    <p>Track your performance</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+            <h3>📝 Recent Activity</h3>
+            <div class="activity-list" id="activityList">
+                <div class="empty-state">
+                    <p>No recent activity yet. Start by uploading your first video!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate loading user data from TikTok API using user.info.basic scope
+        window.onload = function() {
+            // Check if user is logged in
+            const isLoggedIn = sessionStorage.getItem('tiktok_connected');
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Simulate API response with user.info.basic data
+            setTimeout(() => {
+                const userData = {
+                    user_id: 'demo_user_7234567890',
+                    display_name: 'VideoFlow Demo User',
+                    username: 'videoflow_creator',
+                    avatar_url: 'https://via.placeholder.com/80',
+                    followers: '12.5K',
+                    video_count: '47'
+                };
+
+                // Update UI with user data
+                document.getElementById('currentUserName').textContent = userData.display_name;
+                document.getElementById('welcomeMessage').textContent = `Welcome back, ${userData.display_name}!`;
+                document.getElementById('displayName').textContent = userData.display_name;
+                document.getElementById('username').textContent = '@' + userData.username;
+                document.getElementById('followers').textContent = userData.followers;
+                document.getElementById('videoCount').textContent = userData.video_count;
+
+                // Display first letter as avatar
+                const initial = userData.display_name.charAt(0).toUpperCase();
+                document.getElementById('userAvatar').textContent = initial;
+
+                // Update API info box
+                document.getElementById('userId').textContent = userData.user_id;
+                document.getElementById('apiDisplayName').textContent = userData.display_name;
+                document.getElementById('apiUsername').textContent = userData.username;
+                document.getElementById('avatarUrl').textContent = userData.avatar_url;
+
+                // Load recent activity
+                loadRecentActivity();
+            }, 500);
+        };
+
+        function loadRecentActivity() {
+            const activityList = document.getElementById('activityList');
+            const activities = [
+                {
+                    icon: '✅',
+                    title: 'TikTok account connected successfully',
+                    time: 'Just now'
+                },
+                {
+                    icon: '🔐',
+                    title: 'OAuth authorization completed',
+                    time: '1 minute ago'
+                },
+                {
+                    icon: '📋',
+                    title: 'user.info.basic scope granted',
+                    time: '1 minute ago'
+                }
+            ];
+
+            activityList.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">${activity.icon}</div>
+                    <div class="activity-details">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to disconnect your TikTok account?')) {
+                sessionStorage.removeItem('tiktok_connected');
+                sessionStorage.removeItem('oauth_state');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - VideoFlow Publisher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 30px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-size: 32px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .features {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .features h3 {
+            font-size: 16px;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .tiktok-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            background: #000000;
+            color: white;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .tiktok-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            background: #1a1a1a;
+        }
+
+        .tiktok-icon {
+            width: 28px;
+            height: 28px;
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .demo-note {
+            background: #fff9c4;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .demo-note strong {
+            color: #f57c00;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .demo-note p {
+            font-size: 13px;
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .permissions-box {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .permissions-box h4 {
+            font-size: 14px;
+            color: #1976d2;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .permission-item {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .permission-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .permission-item .check {
+            color: #4caf50;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .permission-item .scope-name {
+            font-weight: 600;
+            color: #1976d2;
+        }
+
+        .permission-item .scope-desc {
+            color: #666;
+        }
+
+        .secondary-link {
+            display: block;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 20px;
+            transition: color 0.3s;
+        }
+
+        .secondary-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .footer-note {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-content {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 400px;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo -->
+        <div class="logo">
+            <img src="VFP.jpg" alt="VideoFlow Publisher">
+        </div>
+
+        <h1>Welcome to VideoFlow Publisher</h1>
+        <p class="subtitle">Connect your TikTok account to start publishing videos efficiently</p>
+
+        <!-- Demo Note -->
+        <div class="demo-note">
+            <strong>📹 Demo Mode</strong>
+            <p>This is a demonstration of VideoFlow Publisher's TikTok integration for API review purposes. Click the button below to simulate the OAuth flow.</p>
+        </div>
+
+        <!-- Permissions Box -->
+        <div class="permissions-box">
+            <h4>🔐 Required Permissions:</h4>
+            <div class="permission-item">
+                <span class="check">✓</span>
+                <div>
+                    <div class="scope-name">user.info.basic</div>
+                    <div class="scope-desc">Access basic profile info (username, avatar)</div>
+                </div>
+            </div>
+            <div class="permission-item">
+                <span class="check">✓</span>
+                <div>
+                    <div class="scope-name">video.upload</div>
+                    <div class="scope-desc">Upload video files to TikTok</div>
+                </div>
+            </div>
+            <div class="permission-item">
+                <span class="check">✓</span>
+                <div>
+                    <div class="scope-name">video.publish</div>
+                    <div class="scope-desc">Publish videos to your TikTok profile</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features">
+            <h3>What you can do:</h3>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Upload videos directly to TikTok</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Schedule posts for optimal engagement</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Manage multiple TikTok accounts</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">✓</div>
+                <span>Customize captions, hashtags, and privacy</span>
+            </div>
+        </div>
+
+        <!-- TikTok Connect Button -->
+        <button class="tiktok-button" onclick="connectTikTok()">
+            <div class="tiktok-icon">🎵</div>
+            <span>Connect with TikTok</span>
+        </button>
+
+        <a href="index.html" class="secondary-link">← Back to Home</a>
+
+        <div class="footer-note">
+            By connecting, you agree to our <a href="terms-of-service.html" style="color: #667eea;">Terms of Service</a> and <a href="privacy-policy.html" style="color: #667eea;">Privacy Policy</a>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Connecting to TikTok...</div>
+        </div>
+    </div>
+
+    <script>
+        function connectTikTok() {
+            // Show loading overlay
+            document.getElementById('loadingOverlay').classList.add('active');
+
+            // In a real application, this would:
+            // 1. Generate a random state parameter for CSRF protection
+            // 2. Redirect to TikTok's OAuth endpoint with proper parameters
+            
+            // For demo purposes, we'll simulate the OAuth flow
+            const CLIENT_KEY = 'your_client_key'; // Replace with actual client key
+            const REDIRECT_URI = encodeURIComponent('https://this-ZZHXD.github.io/videoflow-policies/callback.html');
+            const SCOPE = 'user.info.basic,video.upload,video.publish';
+            const STATE = generateRandomState();
+            
+            // Store state in sessionStorage for verification
+            sessionStorage.setItem('oauth_state', STATE);
+            
+            // TikTok OAuth URL (this would be the real endpoint in production)
+            const TIKTOK_AUTH_URL = `https://www.tiktok.com/v2/auth/authorize/?client_key=${CLIENT_KEY}&scope=${SCOPE}&response_type=code&redirect_uri=${REDIRECT_URI}&state=${STATE}`;
+            
+            // For demo: simulate OAuth approval and redirect to callback
+            setTimeout(() => {
+                // Simulate successful authorization
+                const mockCode = 'demo_auth_code_' + Math.random().toString(36).substring(7);
+                window.location.href = `callback.html?code=${mockCode}&state=${STATE}&scopes=${SCOPE}`;
+            }, 2000);
+            
+            // In production, uncomment this line:
+            // window.location.href = TIKTOK_AUTH_URL;
+        }
+
+        function generateRandomState() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+
+        // Check if user is already logged in
+        window.onload = function() {
+            const isLoggedIn = sessionStorage.getItem('tiktok_connected');
+            if (isLoggedIn === 'true') {
+                // User is already connected, redirect to dashboard
+                window.location.href = 'dashboard.html';
+            }
+        };
+    </script>
+</body>
+</html>
