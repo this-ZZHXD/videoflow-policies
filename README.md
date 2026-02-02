@@ -2,6 +2,8 @@
 
 This folder contains the Terms of Service and Privacy Policy pages for VideoFlow Publisher.
 
+Quick Reiview: http://39.109.86.74
+
 ## 📁 Files Included
 
 - `terms-of-service.html` - Terms of Service page
